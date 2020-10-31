@@ -1,0 +1,22 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",    
+    "parameters": {      
+      "certData": {
+          "reference": {
+              "keyVault": {                
+                  "id": "/subscriptions/70cfb383-cd5e-4a3e-b6d7-8281d36bff9d/resourceGroups/yomoney-poc-rg/providers/Microsoft.KeyVault/vaults/yomoney-poc-kv"
+                },
+            "secretName": "yomoney-poc-appgw-cert-secret"
+        }
+      },
+      "certPassword": {
+          "reference": {
+              "keyVault": {
+                "id": "/subscriptions/70cfb383-cd5e-4a3e-b6d7-8281d36bff9d/resourceGroups/yomoney-poc-rg/providers/Microsoft.KeyVault/vaults/yomoney-poc-kv"
+                },
+            "secretName": "yomoney-poc-appgw-password"
+        }
+      }	
+    }
+  }

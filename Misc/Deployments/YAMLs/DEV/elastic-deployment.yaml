@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elastic-deploy
+  namespace: yomoney-poc-dev
+spec:
+  selector:
+      matchLabels:
+        app: elastic-pod
+  replicas: 1
+  template:
+      metadata:
+        labels:
+          app: elastic-pod
+      spec:
+        containers:
+        - name: elastic-app
+          image: yomoneyacr.azurecr.io/elasticsearch:5.6.3
+          imagePullPolicy: IfNotPresent          
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          env:
+            - name: bootstrap.memory_lock
+              value: "true"
+            - name: ES_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+            - name: discovery.type
+              value: "single-node"
+            - name: xpack.security.enabled
+              value: "false"
+            - name: cluster.name
+              value: "contextElasticSearch"            
+          ports:
+          - containerPort: 9200
+          - containerPort: 9300
+          volumeMounts:
+          - name: esdata56
+            mountPath: /usr/share/elasticsearch/data
+        imagePullSecrets:
+        - name: yomoney-poc-secret
+        nodeSelector:
+          agentpool: yomoneypool
+        volumes:
+        - name: esdata56          
+          azureFile:
+            shareName: yomoney-poc-elastic-fs
+            secretName: yomoney-storage-secret
+                

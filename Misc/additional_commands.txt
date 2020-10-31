@@ -1,0 +1,42 @@
+openssl req -new -newkey rsa:2048 -nodes -out yomoney.csr -keyout yomoney.key
+openssl x509 -req -days 365 -in yomoney.csr -signkey yomoney.key -out yomoney.crt
+openssl pkcs12 -export -out yomoney.pfx -inkey yomoney.key -in yomoney.crt
+
+k create secret docker-registry yomoney-poc-secret --docker-server=yomoneyacr.azurecr.io --docker-username=4970b794-92ca-4154-949c-8ace0b45d31a --docker-password=eba8687e-dc83-40b1-ad0c-44a1898da34b -n yomoney-poc-dev
+k create secret generic yomoney-storage-secret --from-literal=azurestorageaccountname=yomoneypocstorage --from-literal=azurestorageaccountkey=Ga/5OJ9lW+DeYhSgVVglyJKmyRhmdYI77SGSBWqFoVB9Gxmgg6SnExSzfVTjPiNKNtoUdaNKis/w8u3Z3g+O/g== -n yomoney-poc-dev
+
+// Ubuntu Self hoste agent config
+https://vstsagentpackage.azureedge.net/agent/2.166.3/vsts-agent-linux-x64-2.166.3.tar.gz
+curl https://vstsagentpackage.azureedge.net/agent/2.166.3/vsts-agent-linux-x64-2.166.3.tar.gz --output vsts-agent-linux-x64-2.166.3.tar.gz
+tar -xvf vsts-agent-linux-x64-2.166.3.tar.gz -C ../devops-agent/
+
+// PAT
+fo2rxnq4lbfiybtxikanipgrmbcqvazeudpucrkrho6y64f24uvq
+
+https://dev.azure.com/modattaLulu-Owner
+
+// SSH
+ssh devops-vm-ubuntu1804@13.71.95.9
+
+
+// docker 
+sudo snap install docker
+
+// azure-cli
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+// powershell
+sudo apt-get install -y powershell
+Install-Module -Name Az -AllowClobber
+
+// kubectl
+sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+sudo apt-get update
+sudo apt-get install -y kubectl
+
+// helm
+// helm
+sudo snap install helm (brew for mac)
+helm repo add stable https://kubernetes-charts.storage.googleapis.com/

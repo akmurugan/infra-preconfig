@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unomi-deploy
+  namespace: yomoney-poc-dev
+spec:
+  selector:
+      matchLabels:
+        app: unomi-pod
+  replicas: 1
+  template:
+      metadata:
+        labels:
+          app: unomi-pod
+      spec:
+        containers:
+        - name: unomi-app
+          image: yomoneyacr.azurecr.io/unomi:1.4.0
+          imagePullPolicy: IfNotPresent          
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          env:
+          - name: ELASTICSEARCH_HOST
+            value: "elastic-service"
+          - name: ELASTICSEARCH_PORT
+            value: "9300"
+          ports:
+          - containerPort: 8181
+          - containerPort: 9443
+        imagePullSecrets:
+          - name: yomoney-poc-secret
+        nodeSelector:
+          agentpool: yomoneypool        
+                

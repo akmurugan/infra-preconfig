@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elastic-service
+  namespace: yomoney-poc-dev
+spec:
+  selector:
+    app: elastic-pod
+  ports:
+  - port: 9200
+    targetPort: 9200
+    name: elastic-port1
+  - port: 9300
+    targetPort: 9300
+    name: elastic-port2
+  type: ClusterIP

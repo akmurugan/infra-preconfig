@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "fanguruVNetName": {
+      "type": "string"
+    },
+    "fanguruVNetPrefix": {
+      "type": "string"
+    },      
+    "appgwSubnetName": {
+      "type": "string"
+    },
+    "appgwSubnetPrefix": {
+      "type": "string"
+    },
+    "apimSubnetName": {
+      "type": "string"
+    },
+    "apimSubnetPrefix": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    }
+  },
+  "variables": {},
+  "resources": [
+    {
+      "apiVersion": "2018-10-01",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[parameters('fanguruVNetName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('fanguruVNetPrefix')]"
+          ]
+        }
+      },
+      "resources": [     
+        {
+          "apiVersion": "2018-10-01",
+          "type": "subnets",
+          "location": "[parameters('location')]",
+          "name": "[parameters('appgwSubnetName')]",
+          "dependsOn": [
+            "[parameters('fanguruVNetName')]"
+            ],
+          "properties": {
+            "addressPrefix": "[parameters('appgwSubnetPrefix')]"
+          }
+        },
+        {
+          "apiVersion": "2018-10-01",
+          "type": "subnets",
+          "location": "[parameters('location')]",
+          "name": "[parameters('apimSubnetName')]",
+          "dependsOn": [
+            "[parameters('fanguruVNetName')]",
+            "[parameters('appgwSubnetName')]"
+          ],
+          "properties": {
+            "addressPrefix": "[parameters('apimSubnetPrefix')]"
+          }
+        }
+      ]
+    }
+  ]
+}
